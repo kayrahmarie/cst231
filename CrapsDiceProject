@@ -1,0 +1,235 @@
+#include <iostream>
+#include <ctime>
+#include <string>
+using namespace std;
+
+
+// I chose to do the code when you bet 
+// if you win you double what you bet. 
+
+class Die
+{
+	private:
+		int value;
+	public:
+		int get_value();
+		void roll();
+};
+
+class Gambler
+{
+	private:
+		string name;
+		int cash;
+	public:
+		int get_cash();
+		void set_cash(int amt);
+		string get_name();
+		void set_name(string n);
+		void add_cash(int amt);
+		void sub_cash(int amt);
+};
+
+bool check_bet(Gambler g, int bet);
+void begin_game(Gambler& player, string& n, int &amt);
+void bet_game(Gambler &player, Die &d1, Die &d2, int &roll, int &amt, int& bet);
+void lets_play(Gambler &player, Die &d1, Die &d2, int &roll, int &amt, int& bet);
+void roll_again(Gambler &player, Die &d1, Die &d2, int &roll, int &amt, int& bet);
+void roll_or_bet(Gambler &player, Die &d1, Die &d2, int &roll, int &amt, int& bet);
+
+int main()
+{
+	Gambler player;
+	Die d1, d2;
+	string n;
+	int amt, bet, roll;
+	char cont;
+	srand((unsigned)time(NULL));
+
+	begin_game(player,n,amt);
+	do
+	{
+		if(player.get_cash() == 0)
+		{
+			cout << "Sorry, it looks like you don't have enough cash. " << endl;
+			break;
+		}
+		cout << "\n**** NEW GAME OF CRAPS! ****\n";
+		cout << "You are starting with $" << player.get_cash() << endl;
+		cout << "What is your starting bet? $";
+		cin >> bet;
+		check_bet(player, bet);
+		if(check_bet(player,bet) == false)
+		{
+			cout << "Sorry, it looks like you don't have enough cash. " << endl;
+		}
+		else
+		{
+			lets_play(player,d1,d2,roll, amt, bet);
+		}
+		cout << "Would you like to continue? Y/N: ";
+		cin >> cont;
+	}while(cont == 'y' || cont == 'Y');
+
+	cout << "Thank you for playing!, you left with a total of $" << player.get_cash() << endl;
+}
+
+
+int Die::get_value()
+{
+	return value;
+}
+
+void Die::roll()
+{
+	value = (rand() % 6) + 1;
+}
+
+int Gambler::get_cash()
+{
+	return cash;
+}
+
+void Gambler:: set_cash(int amt)
+{
+	cash = amt;
+}
+
+string Gambler::get_name()
+{
+	return name;
+}
+
+void Gambler::set_name(string n)
+{
+	name = n;
+}
+
+void Gambler:: add_cash(int bet)
+{
+	cash+=(bet*2);
+}
+
+void Gambler::sub_cash(int bet)
+{
+	cash-=bet;
+}
+
+void begin_game(Gambler& player, string& n, int& amt)
+{
+	cout << "Welcome to CSIT Craps, what is your name? ";
+	cin >> n;
+	player.set_name(n);
+	cout << "Okay, " << player.get_name() << " how much cash do you have today? $";
+	cin >> amt;
+	player.set_cash(amt);
+	cout << "Let's Play! " << endl << endl;
+}
+
+void lets_play(Gambler &player, Die &d1, Die &d2, int &roll, int& amt, int& bet)
+{
+	d1.roll();
+	d2.roll();
+	roll = d1.get_value() + d2.get_value();
+
+	char again;
+
+	cout << "Your initial rolls were: " << d1.get_value() << " and " << d2.get_value() << " for a total of " << roll << endl;
+	if(roll == 7 || roll == 11)
+	{
+		player.add_cash(bet);
+		cout << "You win! You have won $" << (bet * 2) << "!\n";
+	}
+	else if(roll == 2)
+	{
+		player.sub_cash(bet);
+		cout << "I'm sorry, you lose. Better luck next time. You are down $" << bet <<endl;
+	}
+	else if(roll == 3)
+	{
+		player.sub_cash(bet);
+		cout << "I'm sorry, you lose. Better luck next time. You are down $" << bet <<endl;
+	}
+	else if(roll == 12)
+	{
+		player.sub_cash(bet);
+		cout << "I'm sorry, you lose. Better luck next time. You are down $" << bet <<endl;
+	}
+	else
+	{
+		roll_or_bet(player,d1,d2,roll,amt,bet);
+	}
+
+}
+
+void bet_game(Gambler &player, Die &d1, Die &d2, int &roll, int &amt, int& bet)
+{
+	int new_bet;
+	cout << "Please enter your bet: $";
+	cin >> new_bet;
+	bet += new_bet;
+	check_bet(player,bet);
+
+	if(check_bet(player,bet) == false)
+	{
+		cout << "You can't afford that bet! Game over!\n";
+	}
+	else
+	{
+		cout << "Your bet is up to $" << bet << endl;
+		roll_again(player,d1,d2,roll,amt,bet);
+	}
+}
+
+void roll_again(Gambler &player, Die &d1, Die &d2, int &roll, int &amt, int& bet)
+{
+	int new_roll;
+	d1.roll();
+	d2.roll();
+	new_roll = d1.get_value() + d2.get_value();
+
+	cout << "Rolling again" << endl;
+	cout << "Your new roll is: " << d1.get_value() << " and " << d2.get_value() << " for a total of " << new_roll << endl;
+
+	if(new_roll == roll)
+	{
+		player.add_cash(bet);
+		cout << "You win! You have won $" << (bet * 2) << "!\n";
+	}
+	else if (new_roll == 7)
+	{
+		player.sub_cash(bet);
+		cout << "Oh no! The house wins! You lost $" << bet << endl;
+	}
+	else 
+	{
+		roll_or_bet(player,d1,d2,roll,amt,bet);
+	}
+}
+
+void roll_or_bet(Gambler &player, Die &d1, Die &d2, int &roll, int &amt, int& bet)
+{
+	char again;
+	cout << "Would you like to (r)oll again or (b)et? ";
+	cin >> again;
+
+		if(again == 'r' || again == 'R')
+		{
+			roll_again(player, d1,d2,roll, amt,bet);
+		}
+		else if(again == 'B' || again == 'b')
+		{
+			bet_game(player,d1,d2,roll,amt,bet);
+		}
+}
+bool check_bet(Gambler player, int bet)
+{
+	if( player.get_cash() < bet)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
