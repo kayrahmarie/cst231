@@ -1,0 +1,64 @@
+#include <iostream>
+using namespace std;
+
+int deposit (int bal);
+int withdrawal (int with);
+
+int main()
+{
+	char cont;
+	int balance, choice, totalbalance;
+		
+	cout << "Welcome to the CST 231 ATM!\nPlease enter your starting balance: $";
+	cin >> balance;
+	do
+	{
+		cout << "MENU:\n(1) Deposit\n(2) Withdrawal\nPlease enter your choice: ";
+		cin >> choice;
+		if(choice == 1)
+		{
+			totalbalance = deposit (balance);
+		}
+		else if (choice == 2)
+		{
+			totalbalance = withdrawal(balance);
+		}
+		else
+		{
+			cout << "I'm sorry, that is not an option.";
+		}
+	cout << "Your new balance is: $" << totalbalance << endl;
+	balance = totalbalance;
+	cout << "Would you like another transaction? y/n: ";
+	cin >> cont;
+
+	}while(cont == 'y' || cont == 'Y');
+
+	cout << "Thank you for using the CST 231 ATM! Have a wonderful day! \n";
+
+}
+
+int deposit (int bal)
+{
+	int total, deposit_amt;
+	cout << "Please enter the amount to deposit: $";
+	cin >> deposit_amt;
+	total = bal + deposit_amt;
+	return total;
+}
+int withdrawal (int with)
+{
+	int tot, with_amt;
+	cout << "Please enter the amount to withdraw: $";
+	cin >> with_amt;
+	if( with_amt > with)
+	{
+		cout << "I am sorry, you do not have sufficient funds for that transaction!\n";
+		withdrawal (with);
+	}
+	else
+	{
+		tot = with - with_amt;
+		return tot;
+	}
+}
