@@ -1,0 +1,83 @@
+#include <iostream>
+using namespace std;
+
+void rectangle(double w, double h,double &area, double &per);
+void triangle(double w, double h, double s1, double s2, double &area, double &per);
+void circle(double w, double &area, double &per);
+
+
+int main ()
+{
+	int shape;
+	double w, h, area, per, s1, s2;
+
+	cout.setf(ios::fixed);
+	cout.setf(ios::showpoint);
+	cout.precision(2);
+
+	cout << "Welcome to the area calculator!\nShape Menu:\n1. Rectangle\n2. Triangle\n3. Circle\n";
+	cout << "What kind of shape do you see? ";
+	cin >> shape;
+
+	if(shape == 1)
+	{
+		cout << "Please enter the width: ";
+		cin >> w;
+		cout << "Please enter the height: ";
+		cin >> h;
+
+		rectangle (w,h,area,per);
+
+		cout << "The area of your rectangle is: " << area << endl;
+		cout << "The perimeter of your rectangle is: " << per << endl;
+	}
+	else if(shape == 2)
+	{
+		cout << "Please enter the base: ";
+		cin >> w;
+		cout << "Please enter the length of side 1: ";
+		cin >> s1;
+		cout << "Please enter the length of side 2: ";
+		cin >> s2;
+		cout << "Please enter the height: ";
+		cin >> h;
+
+		triangle (w, h, s1, s2, area,per);
+
+		cout << "The area of your triangle is: " << area << endl;
+		cout << "The perimeter of your triangle is: " << per <<endl;
+	}
+	else if(shape == 3)
+	{
+		cout << "Please enter the radius: ";
+		cin >> w;
+
+		circle (w,area,per);
+		
+		cout << "The area of your circle is: " << area << endl;
+		cout << "The perimeter of your circle is: " << per << endl;
+	}
+	else
+	{
+		cout << "I'm sorry, I do not recognize that command." << endl;
+	}
+}
+
+void rectangle(double width,double height, double &area, double &per)
+{
+	area = width * height;
+	per = (2 * width) + (2 * height);
+
+}
+
+void triangle(double base, double height, double side1, double side2, double &area, double &per)
+{
+	area = base * height * .5;
+	per = side1 + side2 + base;
+}
+
+void circle(double radius, double &area, double &per)
+{
+	area = 3.14 * radius * radius;
+	per = 2 * 3.14 * radius;
+}
