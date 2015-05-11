@@ -1,0 +1,194 @@
+#include <iostream>
+#include <ctime>
+#include <iomanip>
+using namespace std;
+
+void fill_board(char battle[][10], int rows);
+void init_board(char battle[][10], int &battleship1, int &battleship2, int &boat2, int &check);
+void print_board(char battle[][10], int rows);
+void make_move(char battle [][10], int &att_r, int &att_c, int &battleship1, int &battleship2, int &hit, int &count);
+
+const int boats = 4;
+const int rows = 10;
+const int colms = 10;
+
+
+int main()
+{
+	char battle[rows][colms];
+	int battleship1, battleship2, boat2, att_r, att_c, hit = 0, check, count = 0;
+	cout << "Welcome to CST 231 battleship! " << endl;
+
+	fill_board(battle, rows);
+	init_board(battle, battleship1, battleship2, boat2, check);
+	print_board(battle, rows);
+	
+	do
+	{
+		make_move(battle, att_r, att_c, battleship1, battleship2, hit, count);
+	}
+	while (hit != 8);
+
+	cout << "You sank all of my ships! :) \n";
+	cout << "It only took you " << count << " turns! \nThanks for playing!\n";
+
+	return 0;
+}
+//fills the game board with O's.
+void fill_board(char battle[][10], int rows)
+{
+		for(int i = 0; i < rows; i++)
+		{
+			for(int j=0; j < rows; j++)
+			{
+				battle[i][j]= 'O';
+			}
+		}
+}
+//makes the random boat spaces.
+void init_board(char battle[][10], int &battleship1, int &battleship2, int &boat2, int &check)
+{
+	srand((unsigned)time(NULL));
+
+	for(int i=0; i < boats; i++)
+	{
+		check = 0;
+
+		//random spot for the first part of the boat
+		battleship1=rand() % 10;
+		battleship2=rand() % 10;
+
+		if(battle[battleship1][battleship2] == 'B')
+		{
+			i--;
+			check=1;
+		}
+		else
+		{
+			battle[battleship1][battleship2] = 'B';
+		}
+		
+		for(int j=0; j<1; j++)
+		{
+			//makes the random second part of the boat
+			boat2 = rand() % 4;
+
+			if(check==1)
+			{
+				//stops from putting second spot if it doesn't put the first spot.
+			}
+			//next else ifs fill the boat spots with B's to help me check they were working correctly.
+			else if(boat2 == 0)
+			{
+				if((battle[battleship1 - 1][battleship2] == 'B')||(battleship1==0))
+				{
+					j--;
+				}
+				else
+				{
+					battle[battleship1 - 1][battleship2] = 'B';
+				}
+			}	
+		else if(boat2 == 1)
+			{
+				if((battle[battleship1][battleship2 + 1] == 'B')||(battleship2 ==9))
+				{
+					j--;
+				}
+				else
+				{
+					battle[battleship1][battleship2 + 1] = 'B';
+				}
+			}	
+		else if(boat2 ==2)
+			{
+				if((battle[battleship1 +1][battleship2] == 'B')||(battleship1 ==9))
+				{
+					j--;
+				}
+				else
+				{
+					battle[battleship1 +1][battleship2] = 'B';
+				}
+			}
+		else if(boat2 ==3)
+			{
+				if((battle[battleship1][battleship2 -1] == 'B')||(battleship2 ==0))
+				{
+					j--;
+				}
+				else
+				{
+					battle[battleship1][battleship2 - 1] = 'B';
+				}
+			}
+		}
+	}
+}
+//prints the game board
+void print_board(char battle[][10], int rows)
+{
+	cout << setw(3);
+	
+	for (int r =0; r < rows; r++)
+	{
+		cout << r << " ";
+	}
+	cout << endl;
+	for(int i=0; i<rows; i++)
+		{
+			cout<< i << " ";
+			for(int j=0; j<rows; j++)
+			{
+				//changes the B's to O's
+				if(battle[i][j] == 'B')
+				{
+					cout << 'O' << " ";
+				}
+				else
+				{
+					cout << battle[i][j] << " ";
+				}
+			}
+			cout << endl;
+		}
+	return;
+}
+//changes hits to *, misses to X's, checks if outside the 'ocean', and checks if the spot that was put was already guessed.
+void make_move(char battle [][10], int &att_r, int &att_c, int &battleship1, int &battleship2, int &hit, int &count)
+{
+		cout << endl << "Where would you like to attack?: ";
+		cin >> att_r;
+		cin >> att_c;
+		
+		if(battle[att_r][att_c] == 'B')
+		{
+			cout << "Hit!!" << endl;
+			battle[att_r][att_c] = '*';
+			print_board(battle, rows);
+			hit++;
+			count++;
+			
+		}
+		else if((att_r < 0 || att_r >=rows) || (att_c < 0 || att_c >= rows))
+		{
+			cout << "Yikes! That is outside the ocean!" << endl << endl;
+			print_board(battle, rows);
+			count++;
+		}
+
+		else if(battle[att_r][att_c] == 'X')
+		{
+			cout << "Already guessed!" << endl;
+			print_board(battle, rows);
+			count++;
+		}	
+		else
+		{
+			cout << "MISS!" << endl;
+			battle[att_r][att_c] = 'X';
+			print_board(battle, rows);
+			count++;
+		}
+	
+}
