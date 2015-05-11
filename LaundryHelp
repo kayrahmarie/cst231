@@ -1,0 +1,19 @@
+#include <iostream>
+using namespace std;
+
+int main()
+{ 
+	int change_amount, laundry_loads, cents_amt, treats;
+	const int wash = 125, dry = 50;
+	
+	cout << "Please enter the total amount of change (in cents): ";
+	cin >> change_amount;
+
+	laundry_loads = (change_amount/(wash+dry));
+	cents_amt = ((wash+dry)*laundry_loads);
+	treats = (change_amount - cents_amt);
+
+	cout << "You can do " << laundry_loads << " loads of laundry." << endl;
+	cout << "And you have: " << treats << " cents left to spend on treats!" <<endl;
+
+}
