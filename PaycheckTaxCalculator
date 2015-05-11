@@ -1,0 +1,25 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main()
+{
+	const double tax_rate = 0.35;
+	int salary;
+	double paycheck, tax_total;
+	string name; 
+	
+
+	cout << "Please enter your name: ";
+	cin >> name;
+
+	cout << "Please enter your base salary: ";
+	cin >> salary;
+
+	tax_total = salary * tax_rate;
+	paycheck = salary - tax_total;
+
+
+	cout << "Dear " << name << ", \nYour taxes total " << tax_total << endl; 
+	cout << "so your paycheck is " << paycheck << endl;
+}
